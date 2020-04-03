@@ -14,7 +14,7 @@ const CITY_WEATHER_QUARY_FAIL = "CITY_WEATHER_QUARY_FAIL";
 RSAA getCityRequest(String city) {
   return RSAA(
       method: 'GET',
-      endpoint: "http://localhost:3000/weather/location/$city",
+      endpoint: "http://localhost:3001/weather/location/$city",
       types: [
         CITY_QUARY_REQUST,
         CITY_QUARY_SUCCESS,
@@ -31,16 +31,16 @@ ThunkAction<AppState> getCity({String city = "Guangzhou"}) =>
 RSAA getCityWeatherRequest(int woeid) {
   return RSAA(
       method: 'GET',
-      endpoint: "http://localhost:3000/weather/weather/$woeid",
+      endpoint: "http://localhost:3001/weather/weather/$woeid",
       types: [
-        CITY_QUARY_REQUST,
-        CITY_QUARY_SUCCESS,
-        CITY_QUARY_FAIL
+        CITY_WEATHER_QUARY_REQUST,
+        CITY_WEATHER_QUARY_SUCCESS,
+        CITY_WEATHER_QUARY_FAIL
       ],
       headers: {
         'Content-Type': 'application/json',
       });
 }
 
-ThunkAction<AppState> getCityWeather({int city = 2161838}) =>
-    (Store<AppState> store) => store.dispatch(getCityWeatherRequest(city));
+ThunkAction<AppState> getCityWeather(int woeid) =>
+    (Store<AppState> store) => store.dispatch(getCityWeatherRequest(woeid));

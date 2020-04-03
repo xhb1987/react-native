@@ -1,3 +1,4 @@
+import 'package:expressfrontend/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
@@ -20,7 +21,7 @@ class FlutterReduxApp extends StatelessWidget {
       // Widgets will find and use this value as the `Store`.
       store: store,
       child: new MaterialApp(
-        theme: new ThemeData.dark(),
+        theme: themeData,
         title: title,
         home: new Scaffold(
           appBar: new AppBar(

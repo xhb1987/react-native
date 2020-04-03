@@ -21,6 +21,12 @@ dependencies:
   redux_thunk: ^0.2.0
   flutter_redux: ^0.5.0
   redux: ^3.0.0
+  recase: ^3.0.0
+  localstorage: ^3.0.0
+  json_serializable: ^3.3.0
+  json_annotation: ^3.0.1
+  carousel_slider: ^1.4.1
+  shared_preferences: ^0.5.6+3
   flutter:
     sdk: flutter
 

@@ -5,7 +5,6 @@ import 'city.dart';
 class WeatherState {
   CityState city;
   WeatherDetailState weatherDetail;
-
   WeatherState({this.city, this.weatherDetail});
 
   factory WeatherState.initial() => WeatherState(
@@ -16,11 +15,12 @@ class CityState {
   dynamic error;
   bool loading;
   List<City> data;
+  String searchCity;
 
-  CityState({this.error, this.loading, this.data});
+  CityState({this.error, this.loading, this.data, this.searchCity});
 
   factory CityState.initial() =>
-      CityState(error: null, loading: true, data: []);
+      CityState(error: null, loading: true, data: [], searchCity: "");
 }
 
 class WeatherDetailState {
@@ -29,6 +29,8 @@ class WeatherDetailState {
   Weather weather;
 
   WeatherDetailState({this.error, this.loading, this.weather});
-  factory WeatherDetailState.initial() =>
-      WeatherDetailState(error: null, loading: true, weather: null);
+  factory WeatherDetailState.initial() => WeatherDetailState(
+      error: null,
+      loading: true,
+      weather: Weather(consolidatedWeather: [], title: "", time: ""));
 }

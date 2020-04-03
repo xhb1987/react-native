@@ -1,7 +1,7 @@
 import 'package:expressfrontend/models/app_state.dart';
 import 'package:expressfrontend/reducers/app_reducer.dart';
 import 'package:expressfrontend/routes/routes.dart';
-import 'package:expressfrontend/screens/weather/city.dart';
+import 'package:expressfrontend/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
@@ -22,9 +22,9 @@ class App extends StatelessWidget {
     return StoreProvider(
         store: this.store,
         child: MaterialApp(
-          theme: ThemeData.dark(),
-          title: "Test app",
-          routes: {AppRoutes.WeatherCity: (context) => CityScreen()},
+          theme: themeData,
+          onGenerateRoute: generateRoute,
+          initialRoute: WeatherDetial,
         ));
   }
 }
