@@ -1,6 +1,6 @@
-import 'package:expressfrontend/models/app_state.dart';
 import 'package:expressfrontend/reducers/app_reducer.dart';
 import 'package:expressfrontend/routes/routes.dart';
+import 'package:expressfrontend/state/app_state.dart';
 import 'package:expressfrontend/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';

@@ -1,14 +1,14 @@
-import 'package:expressfrontend/models/app_state.dart';
+import 'package:expressfrontend/actions/search/search_actions.dart';
 import 'package:expressfrontend/routes/routes.dart';
 import 'package:expressfrontend/screens/component/city_card.dart';
-import 'package:expressfrontend/util/storage.dart';
+import 'package:expressfrontend/state/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 
 class CityListScreen extends StatelessWidget {
   initBuild() {
-    List<dynamic> localCityList = Storage.getValue("city_list") ?? [];
+    // List<dynamic> localCityList = Storage.getValue("city_list") ?? [];
   }
 
   @override
@@ -53,5 +53,7 @@ class CityListScreenProps {
 }
 
 CityListScreenProps mapStateToScreen(Store<AppState> store) {
-  return CityListScreenProps(cities: store.state.setting.cities);
+  return CityListScreenProps(
+    cities: store.state.setting.cities,
+  );
 }

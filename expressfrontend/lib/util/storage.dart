@@ -5,8 +5,17 @@ class Storage {
 
   Storage();
 
-  static dynamic getValue(String key) {
-    return storage.getItem(key);
+  static isStorageReady() async {
+    bool isReady = await storage.ready;
+    return isReady;
+  }
+
+  static getValue(String key) async {
+    var isReady = await isStorageReady();
+    if (isReady) {
+      var items = storage.getItem(key);
+      return items;
+    }
   }
 
   static setValue(String key, dynamic value) {
