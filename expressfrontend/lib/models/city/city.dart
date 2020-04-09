@@ -11,4 +11,13 @@ class City {
       locationType: json['location_type'] as String,
       woeId: json['woeid'] as int,
       lattLong: json['latt_long'] as String);
+
+  Map toJson() {
+    return {
+      'title': this.title,
+      'location_type': this.locationType,
+      'woeid': this.woeId,
+      'latt_long': this.lattLong
+    };
+  }
 }

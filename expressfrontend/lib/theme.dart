@@ -12,5 +12,5 @@ final ThemeData themeData = new ThemeData(
         display1: TextStyle(
             fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.black),
         title: TextStyle(
-            fontSize: 24.0, fontWeight: FontWeight.bold, color: Colors.white),
+            fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.white),
         headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold)));

@@ -1,9 +1,8 @@
 import 'package:localstorage/localstorage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Storage {
   static final LocalStorage storage = new LocalStorage("weather");
-
-  Storage();
 
   static isStorageReady() async {
     bool isReady = await storage.ready;

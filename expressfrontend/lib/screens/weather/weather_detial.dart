@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:expressfrontend/actions/setting/setting_action.dart';
 import 'package:expressfrontend/actions/weather/weather_actions.dart';
+import 'package:expressfrontend/models/city/city.dart';
 import 'package:expressfrontend/models/weather/weather.dart';
 import 'package:expressfrontend/routes/routes.dart';
 import 'package:expressfrontend/state/app_state.dart';
@@ -15,6 +18,10 @@ class WeatherDetailScreen extends StatelessWidget {
 
   void handleInitialBuild(WeatherDetailScreenProps props) {
     props.syncWithLocal();
+    List<City> localCityDatas = props.cityDatas;
+    if (localCityDatas != null && localCityDatas.isNotEmpty) {
+      props.getCityWeather(localCityDatas.first.woeId);
+    }
   }
 
   @override
@@ -25,6 +32,7 @@ class WeatherDetailScreen extends StatelessWidget {
       builder: (context, props) {
         bool weatherRequestLoading = props.loading;
         Widget body;
+        List<City> cityDataList = props.cityDatas;
         // if (weatherRequestLoading) {
         //   body = Center(child: CircularProgressIndicator());
         // } else {
@@ -56,23 +64,29 @@ class WeatherDetailScreen extends StatelessWidget {
         //     }
         //   },
         // );
-        body = CarouselSlider(
-          height: MediaQuery.of(context).size.height,
-          items: [1, 2, 3, 4, 5].map((i) {
-            return Builder(
-              builder: (BuildContext context) {
-                return Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin: EdgeInsets.symmetric(horizontal: 2.0),
-                    decoration: BoxDecoration(color: Colors.transparent),
-                    child: Text(
-                      'text $i',
-                      style: TextStyle(fontSize: 16.0),
-                    ));
-              },
-            );
-          }).toList(),
-        );
+
+        if (cityDataList.isEmpty) {
+          body = Text("No data");
+        } else {
+          body = CarouselSlider(
+            enableInfiniteScroll: false,
+            height: MediaQuery.of(context).size.height,
+            items: cityDataList.map((data) {
+              return Builder(
+                builder: (BuildContext context) {
+                  return Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: EdgeInsets.symmetric(horizontal: 2.0),
+                      decoration: BoxDecoration(color: Colors.transparent),
+                      child: Text(
+                        data.title,
+                        style: TextStyle(fontSize: 16.0),
+                      ));
+                },
+              );
+            }).toList(),
+          );
+        }
 
         return Scaffold(
           appBar: AppBar(
@@ -97,18 +111,21 @@ class WeatherDetailScreenProps {
   final Weather weather;
   final List<String> cties;
   final Function syncWithLocal;
+  final List<City> cityDatas;
 
   WeatherDetailScreenProps(
       {this.getCityWeather,
       this.loading,
       this.weather,
       this.cties,
-      this.syncWithLocal});
+      this.syncWithLocal,
+      this.cityDatas});
 }
 
 WeatherDetailScreenProps mapStateToScreen(Store<AppState> store) {
   return WeatherDetailScreenProps(
       cties: store.state.setting.cities,
+      cityDatas: store.state.setting.cityDatas,
       getCityWeather: (int woeid) => store.dispatch(getCityWeather(woeid)),
       weather: store.state.weather.weather,
       loading: store.state.weather.loading,
