@@ -402,10 +402,12 @@ packages:
   splashscreen:
     dependency: "direct main"
     description:
-      name: splashscreen
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.2.0"
+      path: "."
+      ref: f8c1ae4f88258bbf33f4c71d1e7bed089da0d65f
+      resolved-ref: f8c1ae4f88258bbf33f4c71d1e7bed089da0d65f
+      url: "https://github.com/KarimMohamed2005/SplashScreenFlutterPackage.git"
+    source: git
+    version: "1.1.0"
   stack_trace:
     dependency: transitive
     description:

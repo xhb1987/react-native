@@ -36,7 +36,7 @@ SettingState settingReducer(SettingState state, FSA action) {
       }
     case SETTING_SYNC_WITH_LOCAL:
       {
-        newState.syncWithLocal();
+        newState.cityDatas = action.payload;
         return newState;
       }
     case DELETE_CITY:

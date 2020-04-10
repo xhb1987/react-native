@@ -30,6 +30,9 @@ dependencies:
   flutter:
     sdk: flutter
   splashscreen:
+    git:
+      url: https://github.com/KarimMohamed2005/SplashScreenFlutterPackage.git
+      ref: f8c1ae4f88258bbf33f4c71d1e7bed089da0d65f
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2

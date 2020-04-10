@@ -1,5 +1,6 @@
 import 'package:expressfrontend/actions/search/search_actions.dart';
 import 'package:expressfrontend/actions/setting/setting_action.dart';
+import 'package:expressfrontend/models/city/city.dart';
 import 'package:expressfrontend/routes/routes.dart';
 import 'package:expressfrontend/screens/component/city_card.dart';
 import 'package:expressfrontend/state/app_state.dart';
@@ -19,13 +20,13 @@ class CityListScreen extends StatelessWidget {
         converter: (store) => mapStateToScreen(store),
         onInitialBuild: initBuild(),
         builder: (context, props) {
-          List<String> cities = props.cities;
+          List<City> cityDataList = props.cityDataList;
           Widget body = ListView.separated(
             padding: const EdgeInsets.all(16.0),
-            itemCount: cities.length ?? 0,
+            itemCount: cityDataList.length ?? 0,
             separatorBuilder: (context, i) => Divider(),
             itemBuilder: (context, i) {
-              String city = cities[i];
+              String city = cityDataList[i].title;
               return GestureDetector(
                 onLongPress: () {
                   showModalBottomSheet(
@@ -85,13 +86,15 @@ class CityListScreen extends StatelessWidget {
 
 class CityListScreenProps {
   final List<String> cities;
+  final List<City> cityDataList;
   final Function deleteCity;
 
-  CityListScreenProps({this.cities, this.deleteCity});
+  CityListScreenProps({this.cities, this.deleteCity, this.cityDataList});
 }
 
 CityListScreenProps mapStateToScreen(Store<AppState> store) {
   return CityListScreenProps(
       cities: store.state.setting.cities,
+      cityDataList: store.state.setting.cityDatas,
       deleteCity: (String city) => store.dispatch(deleteCity(city)));
 }

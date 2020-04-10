@@ -15,8 +15,8 @@ FSA addCityData(City cityData) {
   return FSA(type: ADD_CITY_DATA, payload: cityData);
 }
 
-FSA settingSyncWithLocal() {
-  return FSA(type: SETTING_SYNC_WITH_LOCAL);
+FSA settingSyncWithLocal(List<City> cityList) {
+  return FSA(type: SETTING_SYNC_WITH_LOCAL, payload: cityList);
 }
 
 FSA deleteCity(String city) {

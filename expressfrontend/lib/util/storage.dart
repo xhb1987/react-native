@@ -4,17 +4,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Storage {
   static final LocalStorage storage = new LocalStorage("weather");
 
+  static Future<bool> isReady() {
+    return storage.ready;
+  }
+
   static isStorageReady() async {
     bool isReady = await storage.ready;
     return isReady;
   }
 
   static getValue(String key) async {
-    var isReady = await isStorageReady();
-    if (isReady) {
-      var items = storage.getItem(key);
-      return items;
-    }
+    var items = await storage.getItem(key);
+    return items;
   }
 
   static setValue(String key, dynamic value) {
