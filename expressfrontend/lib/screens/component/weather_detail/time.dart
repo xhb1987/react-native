@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class Time extends StatelessWidget {
-  final DateTime _dateTime;
+  final DateTime updatedTime;
 
-  Time(this._dateTime);
+  Time(this.updatedTime);
 
   String parseTime(DateTime dt) {
     DateFormat dateFormat = new DateFormat("h:mm a - EEE, MMM d, ''yy");
@@ -21,9 +21,9 @@ class Time extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(vertical: 15),
           child: Text(
-            parseTime(this._dateTime),
+            "Updated on " + parseTime(this.updatedTime),
             style: TextStyle(
-                color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
           ),
         )
       ],

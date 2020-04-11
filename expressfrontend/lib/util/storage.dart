@@ -22,6 +22,10 @@ class Storage {
     storage.setItem(key, value);
   }
 
+  static deleteItem(String key) {
+    storage.deleteItem(key);
+  }
+
   static clearStorage() async {
     await storage.clear();
   }

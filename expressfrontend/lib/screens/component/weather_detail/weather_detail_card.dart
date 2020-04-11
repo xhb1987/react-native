@@ -23,7 +23,7 @@ class WeatherDetailCard extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   CityTitle(this._weather.title),
-                  Time(DateTime.parse(this._weather.time)),
+                  Time(this._weather.updatedTime),
                 ],
               ),
             ),

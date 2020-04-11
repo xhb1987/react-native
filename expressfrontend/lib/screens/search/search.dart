@@ -1,5 +1,6 @@
 import 'package:expressfrontend/actions/search/search_actions.dart';
 import 'package:expressfrontend/actions/setting/setting_action.dart';
+import 'package:expressfrontend/actions/weather/weather_actions.dart';
 import 'package:expressfrontend/models/city/city.dart';
 import 'package:expressfrontend/screens/component/list_item.dart';
 import 'package:expressfrontend/screens/component/search_bar.dart';
@@ -38,6 +39,7 @@ class SearchScreen extends StatelessWidget {
                   onTap: () {
                     props.addCity(data.title);
                     props.addCityData(data);
+                    props.getWeatherDetail(data.woeId);
                     props.clearSearchData();
                     Navigator.of(context).pop();
                   });
@@ -65,6 +67,7 @@ class SearchScreenProps {
   final Function addCity;
   final Function addCityData;
   final Function clearSearchData;
+  final Function getWeatherDetail;
 
   SearchScreenProps(
       {this.getCity,
@@ -73,7 +76,8 @@ class SearchScreenProps {
       this.cities,
       this.addCity,
       this.addCityData,
-      this.clearSearchData});
+      this.clearSearchData,
+      this.getWeatherDetail});
 }
 
 SearchScreenProps mapStateToScreen(Store<AppState> store) {
@@ -82,6 +86,8 @@ SearchScreenProps mapStateToScreen(Store<AppState> store) {
       city: store.state.search.cityDatas,
       loading: store.state.search.loading,
       cities: store.state.setting.cities,
+      getWeatherDetail: (int woeid) =>
+          store.dispatch(getCityWeatherRequest(woeid)),
       clearSearchData: () => store.dispatch(clearSearchData()),
       addCity: (String city) => store.dispatch(addCity(city)),
       addCityData: (City cityData) => store.dispatch(addCityData(cityData)));

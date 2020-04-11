@@ -12,7 +12,7 @@ class EmptyMessage extends StatelessWidget {
         children: <Widget>[
           Text(
             "No city added yet, please add at least one city",
-            style: TextStyle(color: Theme.of(context).errorColor, fontSize: 18),
+            style: TextStyle(color: Colors.white, fontSize: 18),
             textAlign: TextAlign.center,
           )
         ],

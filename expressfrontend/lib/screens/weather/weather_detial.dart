@@ -1,17 +1,17 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:expressfrontend/actions/setting/setting_action.dart';
 import 'package:expressfrontend/actions/weather/weather_actions.dart';
 import 'package:expressfrontend/models/city/city.dart';
 import 'package:expressfrontend/models/weather/weather.dart';
 import 'package:expressfrontend/routes/routes.dart';
 import 'package:expressfrontend/screens/component/empty_error.dart';
-import 'package:expressfrontend/screens/component/weather_detail/city_title.dart';
 import 'package:expressfrontend/screens/component/weather_detail/weather_detail_card.dart';
 import 'package:expressfrontend/state/app_state.dart';
+import 'package:expressfrontend/util/backgrounds.dart';
 import 'package:expressfrontend/util/storage.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:redux/redux.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:splashscreen/splashscreen.dart';
@@ -35,7 +35,7 @@ class _WeatherDetailScreen extends State<WeatherDetailScreen> {
         });
       }),
       title: new Text(
-        'Little weather forecast',
+        'Little weather',
         style: TextStyle(color: Colors.white, fontSize: 36),
         textAlign: TextAlign.center,
       ),
@@ -56,18 +56,32 @@ class AfterSplash extends StatelessWidget {
   // final Object argument;
   // const AfterSplash({Key key, this.argument}) : super(key: key);
   final PageController _pageController = PageController();
+  final RefreshController _refreshController = RefreshController();
 
   void handleInitialBuild(WeatherDetailScreenProps props) async {
     List<dynamic> cityDataList = await Storage.getValue("city_data_list");
-    List<City> localCityDataList =
-        List.from(cityDataList.map((city) => City.fromJSON(city)));
 
-    if (localCityDataList != null && localCityDataList.isNotEmpty) {
-      props.syncWithLocal(localCityDataList);
-      localCityDataList.forEach((City city) {
-        props.getCityWeather(city.woeId);
-      });
-      // props.getCityWeather(localCityDataList.first.woeId);
+    if (cityDataList != null) {
+      List<City> localCityDataList =
+          List.from(cityDataList.map((city) => City.fromJSON(city)));
+
+      if (localCityDataList != null && localCityDataList.isNotEmpty) {
+        props.syncWithLocal(localCityDataList);
+        localCityDataList.forEach((City city) async {
+          var weather = await Storage.getValue(city.title.replaceAll(" ", ''))
+              as Map<String, dynamic>;
+
+          Weather localWeather = Weather.fromJson(weather);
+
+          if (localWeather != null &&
+              DateTime.now().difference(localWeather.updatedTime).inHours < 1) {
+            props.addCityWeatherDetail(localWeather);
+          } else {
+            props.getCityWeather(city.woeId);
+          }
+        });
+        // props.getCityWeather(localCityDataList.first.woeId);
+      }
     }
   }
 
@@ -87,11 +101,24 @@ class AfterSplash extends StatelessWidget {
       builder: (context, props) {
         bool weatherRequestLoading = props.loading;
         Widget body;
+        int index = props.index;
         List<Weather> weatherDataList = props.weatherDataList;
+        List<City> cityDataList = props.cityDatas;
+        Color backgroundColor;
+        List<Color> cardBackgroundColor;
+
+        if (weatherRequestLoading == false) {
+          this._refreshController.refreshCompleted();
+        }
 
         if (weatherDataList.isEmpty) {
           body = EmptyMessage();
         } else {
+          String weatherStateAbbr =
+              weatherDataList[index].consolidatedWeather.first.weatherStateAbbr;
+          backgroundColor = weatherStateBackgroundColors[weatherStateAbbr];
+          cardBackgroundColor = getLinearGradient(weatherStateAbbr);
+
           SmoothPageIndicator indicator = weatherDataList.length > 1
               ? SmoothPageIndicator(
                   controller: _pageController,
@@ -106,7 +133,7 @@ class AfterSplash extends StatelessWidget {
           body = Container(
             decoration: BoxDecoration(
                 gradient: LinearGradient(
-                    colors: [Colors.blue, Colors.blue[100]],
+                    colors: cardBackgroundColor,
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter)),
             child: Column(
@@ -118,70 +145,45 @@ class AfterSplash extends StatelessWidget {
                 ),
                 Container(
                     height: MediaQuery.of(context).size.height * 0.8,
-                    child: PageView.builder(
-                      controller: _pageController,
-                      itemBuilder: (context, index) {
-                        return WeatherDetailCard(weatherDataList[index]);
+                    child: SmartRefresher(
+                      controller: this._refreshController,
+                      child: PageView.builder(
+                        controller: _pageController,
+                        onPageChanged: (index) =>
+                            props.updateWeatherIndex(index),
+                        itemBuilder: (context, index) {
+                          return WeatherDetailCard(weatherDataList[index]);
+                        },
+                        itemCount: weatherDataList.length,
+                        physics: ScrollPhysics(),
+                      ),
+                      onRefresh: () async {
+                        props.getCityWeather(cityDataList[props.index].woeId);
                       },
-                      itemCount: weatherDataList.length,
-                      onPageChanged: (index) {
-                        DateTime dt =
-                            DateTime.parse(weatherDataList[index].time);
-                        print(dt.toUtc());
-                        print(index);
-                      },
-                      physics: ScrollPhysics(),
+                      header: WaterDropHeader(
+                        waterDropColor: Colors.white,
+                        idleIcon: Icon(
+                          Icons.autorenew,
+                          color: Colors.white,
+                        ),
+                        refresh: SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            backgroundColor: Colors.blue[200],
+                            valueColor: AlwaysStoppedAnimation(Colors.white),
+                          ),
+                        ),
+                        completeDuration: Duration(seconds: 0),
+                      ),
                     )),
               ],
             ),
-            // child: PageView.builder(
-            //   controller: _pageController,
-            //   itemBuilder: (context, index) {
-            //     return Text(cityDataList[index].title);
-            //   },
-            //   itemCount: cityDataList.length,
-            //   onPageChanged: (index) {
-            //     print(index);
-            //   },
-            //   physics: ScrollPhysics(),
-            // ),
-            // child: CarouselSlider(
-            //   enableInfiniteScroll: false,
-            //   height: MediaQuery.of(context).size.height,
-            //   items: cityDataList.map((data) {
-            //     return Builder(
-            //       builder: (BuildContext context) {
-            //         return Container(
-            //             width: MediaQuery.of(context).size.width,
-            //             margin: EdgeInsets.only(right: 30),
-            //             decoration: BoxDecoration(
-            //                 boxShadow: [
-            //                   BoxShadow(
-            //                       color: Colors.white.withOpacity(0.1),
-            //                       offset: Offset(0, 0),
-            //                       spreadRadius: 5,
-            //                       blurRadius: 2)
-            //                 ],
-            //                 color: Colors.transparent,
-            //                 borderRadius: BorderRadius.all(Radius.circular(5))),
-            //             child: Padding(
-            //               padding: EdgeInsets.all(5),
-            //               child: Column(
-            //                 children: <Widget>[CityTitle(data.title)],
-            //               ),
-            //             ));
-            //       },
-            //     );
-            //   }).toList(),
-            //   onPageChanged: (index) {
-            //     handleWhenPageChanged(index, props);
-            //   },
-            // ),
           );
         }
 
         return Scaffold(
-          backgroundColor: Colors.blue,
+          backgroundColor: backgroundColor ?? Colors.blue,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
@@ -211,6 +213,9 @@ class WeatherDetailScreenProps {
   final List<String> cties;
   final Function syncWithLocal;
   final List<City> cityDatas;
+  final Function addCityWeatherDetail;
+  final Function updateWeatherIndex;
+  final int index;
 
   WeatherDetailScreenProps(
       {this.getCityWeather,
@@ -218,16 +223,24 @@ class WeatherDetailScreenProps {
       this.weatherDataList,
       this.cties,
       this.syncWithLocal,
-      this.cityDatas});
+      this.cityDatas,
+      this.addCityWeatherDetail,
+      this.updateWeatherIndex,
+      this.index});
 }
 
 WeatherDetailScreenProps mapStateToScreen(Store<AppState> store) {
   return WeatherDetailScreenProps(
+      index: store.state.weather.index,
       cties: store.state.setting.cities,
       cityDatas: store.state.setting.cityDatas,
       getCityWeather: (int woeid) => store.dispatch(getCityWeather(woeid)),
       weatherDataList: store.state.weather.weather,
       loading: store.state.weather.loading,
+      addCityWeatherDetail: (Weather weather) =>
+          store.dispatch(addCityWeatherDetail(weather)),
       syncWithLocal: (List<City> cityList) =>
-          store.dispatch(settingSyncWithLocal(cityList)));
+          store.dispatch(settingSyncWithLocal(cityList)),
+      updateWeatherIndex: (int index) =>
+          store.dispatch(updateWeatherIndex(index)));
 }

@@ -39,12 +39,17 @@ dependencies:
   smooth_page_indicator: ^0.1.5
   intl: ^0.16.1
   flutter_svg: ^0.17.4
+  pull_to_refresh: ^1.5.7
 
 dev_dependencies:
+  flutter_launcher_icons: "^0.7.3"
   flutter_test:
     sdk: flutter
 
-
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/launch_icon.jpeg"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

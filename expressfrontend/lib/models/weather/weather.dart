@@ -45,16 +45,38 @@ class WeatherDetail {
       windDirection: json['wind_direction'] as num,
       windDirectionCompass: json['wind_direction_compass'] as String,
       windSpeed: json['wind_speed'] as num);
+
+  Map toJson() {
+    return {
+      'air_pressure': this.airPressure,
+      'applicable_date': this.applicableDate,
+      'humidity': this.humidity,
+      'id': this.id,
+      'max_temp': this.maxTemp,
+      'min_temp': this.minTemp,
+      'the_temp': this.theTemp,
+      'predictability': this.predictability,
+      'visibility': this.visibility,
+      'weather_state_abbr': this.weatherStateAbbr,
+      'weather_state_name': this.weatherStateName,
+      'wind_direction': this.windDirection,
+      'wind_direction_compass': this.windDirectionCompass,
+      'wind_speed': this.windSpeed
+    };
+  }
 }
 
 class Weather {
   List<WeatherDetail> consolidatedWeather;
   String title;
   String time;
+  DateTime updatedTime;
 
-  Weather({this.consolidatedWeather, this.time, this.title});
+  Weather({this.consolidatedWeather, this.time, this.title, this.updatedTime});
 
   factory Weather.fromJson(Map<String, dynamic> json) {
+    print(json['consolidated_weather'].runtimeType);
+
     var weatherList =
         List<Map<String, dynamic>>.from(json['consolidated_weather']);
 
@@ -63,6 +85,21 @@ class Weather {
     return new Weather(
         consolidatedWeather: consolidatedWeather,
         title: json['title'],
-        time: json['time']);
+        time: json['time'] as String,
+        updatedTime: json['updatedTime'] != null
+            ? DateTime.parse(json['updatedTime'])
+            : DateTime.now());
+  }
+
+  Map toJson() {
+    return {
+      'updatedTime': this.updatedTime.toString(),
+      'title': this.title,
+      'time': this.time,
+      'consolidated_weather':
+          this.consolidatedWeather.map((WeatherDetail weatherDetail) {
+        return weatherDetail.toJson();
+      }).toList()
+    };
   }
 }
