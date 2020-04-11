@@ -37,6 +37,7 @@ class WeatherDetail {
       id: json['id'] as int,
       maxTemp: json['max_temp'] as num,
       minTemp: json['min_temp'] as num,
+      theTemp: json['the_temp'] as num,
       predictability: json['predictability'] as int,
       visibility: json['visibility'] as num,
       weatherStateAbbr: json['weather_state_abbr'] as String,
