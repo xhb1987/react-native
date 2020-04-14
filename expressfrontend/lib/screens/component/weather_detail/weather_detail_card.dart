@@ -12,6 +12,23 @@ class WeatherDetailCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget detailCard = this._weather.consolidatedWeather.isNotEmpty
+        ? Container(
+            child: Column(
+              children: <Widget>[
+                CurrentTemp(this._weather.consolidatedWeather.first.theTemp),
+                WeatherStateName(
+                    this._weather.consolidatedWeather.first.weatherStateName,
+                    this._weather.consolidatedWeather.first.weatherStateAbbr),
+                Divider(),
+                WeatherConditions(
+                    this._weather.consolidatedWeather.first.windSpeed,
+                    this._weather.consolidatedWeather.first.humidity,
+                    this._weather.consolidatedWeather.first.predictability)
+              ],
+            ),
+          )
+        : Container();
     // TODO: implement build
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 25),
@@ -27,21 +44,7 @@ class WeatherDetailCard extends StatelessWidget {
                 ],
               ),
             ),
-            Container(
-              child: Column(
-                children: <Widget>[
-                  CurrentTemp(this._weather.consolidatedWeather.first.theTemp),
-                  WeatherStateName(
-                      this._weather.consolidatedWeather.first.weatherStateName,
-                      this._weather.consolidatedWeather.first.weatherStateAbbr),
-                  Divider(),
-                  WeatherConditions(
-                      this._weather.consolidatedWeather.first.windSpeed,
-                      this._weather.consolidatedWeather.first.humidity,
-                      this._weather.consolidatedWeather.first.predictability)
-                ],
-              ),
-            )
+            detailCard
           ],
         ));
   }

@@ -15,7 +15,8 @@ FSA clearSearchData() {
 RSAA getCityRequest(String city) {
   return RSAA(
       method: 'GET',
-      endpoint: "http://localhost:3001/weather/location/$city",
+      endpoint:
+          "https://yn4kddojti.execute-api.us-east-2.amazonaws.com/dev/weather/location/$city",
       types: [
         CITY_QUARY_REQUST,
         CITY_QUARY_SUCCESS,

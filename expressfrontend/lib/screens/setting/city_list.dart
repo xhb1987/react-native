@@ -1,5 +1,6 @@
 import 'package:expressfrontend/actions/search/search_actions.dart';
 import 'package:expressfrontend/actions/setting/setting_action.dart';
+import 'package:expressfrontend/actions/weather/weather_actions.dart';
 import 'package:expressfrontend/models/city/city.dart';
 import 'package:expressfrontend/routes/routes.dart';
 import 'package:expressfrontend/screens/component/city_card.dart';
@@ -28,6 +29,10 @@ class CityListScreen extends StatelessWidget {
             itemBuilder: (context, i) {
               String city = cityDataList[i].title;
               return GestureDetector(
+                onTap: () {
+                  props.updateIndex(i);
+                  Navigator.pop(context);
+                },
                 onLongPress: () {
                   showModalBottomSheet(
                       shape: RoundedRectangleBorder(
@@ -48,6 +53,7 @@ class CityListScreen extends StatelessWidget {
                               FlatButton(
                                   onPressed: () {
                                     props.deleteCity(city);
+                                    props.updateIndex(0);
                                     Navigator.pop(context);
                                   },
                                   child: Row(
@@ -88,13 +94,16 @@ class CityListScreenProps {
   final List<String> cities;
   final List<City> cityDataList;
   final Function deleteCity;
+  final Function updateIndex;
 
-  CityListScreenProps({this.cities, this.deleteCity, this.cityDataList});
+  CityListScreenProps(
+      {this.cities, this.deleteCity, this.cityDataList, this.updateIndex});
 }
 
 CityListScreenProps mapStateToScreen(Store<AppState> store) {
   return CityListScreenProps(
       cities: store.state.setting.cities,
       cityDataList: store.state.setting.cityDatas,
+      updateIndex: (int index) => store.dispatch(updateWeatherIndex(index)),
       deleteCity: (String city) => store.dispatch(deleteCity(city)));
 }

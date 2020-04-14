@@ -23,18 +23,24 @@ WeatherState weatherReducer(WeatherState weatherState, FSA action) {
       newWeatherState.error = false;
 
       Weather weather = weatherFromJson(action.payload);
+
       if (newWeatherState.weather
           .any((Weather val) => val.title == weather.title)) {
-        newWeatherState.weather
-            .removeWhere((Weather value) => value.title == weather.title);
+        int index = newWeatherState.weather
+            .indexWhere((Weather val) => val.title == weather.title);
+
+        print("index, ${index}");
+
+        newWeatherState.weather[index] = weather;
+      } else {
+        newWeatherState.weather.add(weatherFromJson(action.payload));
       }
-      newWeatherState.weather.add(weatherFromJson(action.payload));
-      print(newWeatherState.weather.length);
+
+      // print(newWeatherState.weather.length);
       return newWeatherState;
     case CITY_WEATHER_QUARY_FAIL:
       newWeatherState.loading = false;
       newWeatherState.error = true;
-      newWeatherState.weather = [];
       return newWeatherState;
     case ADD_CITY_WEATHER_DETAIL:
       newWeatherState.weather.add(action.payload);
@@ -50,7 +56,16 @@ WeatherState weatherReducer(WeatherState weatherState, FSA action) {
       Storage.deleteItem(cityName.replaceAll(" ", ""));
       newWeatherState.weather = weathers;
       return newWeatherState;
+    case ADD_CITY_DATA:
+      City city = action.payload;
+      newWeatherState.weather.add(Weather(
+          consolidatedWeather: [],
+          time: '',
+          updatedTime: DateTime.now(),
+          title: city.title));
 
+      print(newWeatherState.weather.length);
+      return newWeatherState;
     default:
       return newWeatherState;
   }

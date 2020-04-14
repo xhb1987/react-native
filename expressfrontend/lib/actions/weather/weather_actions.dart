@@ -21,7 +21,8 @@ FSA addCityWeatherDetail(Weather weather) {
 RSAA getCityWeatherRequest(int woeid) {
   return RSAA(
       method: 'GET',
-      endpoint: "http://localhost:3001/weather/weather/$woeid",
+      endpoint:
+          "https://yn4kddojti.execute-api.us-east-2.amazonaws.com/dev/weather/weather/$woeid",
       types: [
         CITY_WEATHER_QUARY_REQUST,
         CITY_WEATHER_QUARY_SUCCESS,

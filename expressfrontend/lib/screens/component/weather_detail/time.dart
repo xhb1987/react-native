@@ -7,7 +7,7 @@ class Time extends StatelessWidget {
   Time(this.updatedTime);
 
   String parseTime(DateTime dt) {
-    DateFormat dateFormat = new DateFormat("h:mm a - EEE, MMM d, ''yy");
+    DateFormat dateFormat = new DateFormat("h:mm a");
     String parsedTime = dateFormat.format(dt).toString();
     return parsedTime;
   }
@@ -21,7 +21,7 @@ class Time extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(vertical: 15),
           child: Text(
-            "Updated on " + parseTime(this.updatedTime),
+            "Updated at " + parseTime(this.updatedTime),
             style: TextStyle(
                 color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
           ),

@@ -18,12 +18,12 @@ List<Color> getLinearGradient(String state) {
     "sn": [Colors.blueGrey[900], Colors.blueGrey[800]],
     "sl": [Colors.blueGrey[900], Colors.blueGrey[800]],
     "h": [Colors.blueGrey[900], Colors.blueGrey[800]],
-    "t": [Colors.grey[850], Colors.grey[750]],
+    "t": [Colors.grey[850], Colors.grey[700]],
     "hr": [Colors.grey[800], Colors.grey[700]],
     "lr": [Colors.grey[700], Colors.grey[600]],
     "s": [Colors.grey[900], Colors.grey[800]],
-    "hc": [Colors.blueGrey[600], Colors.blueGrey[500]],
-    "lc": [Colors.blueGrey[500], Colors.blueGrey[400]],
+    "hc": [Colors.blueGrey[600], Colors.blueGrey],
+    "lc": [Colors.blueGrey, Colors.blueGrey[400]],
     "c": [Colors.blue, Colors.blue[100]],
   };
 

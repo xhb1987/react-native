@@ -55,7 +55,7 @@ class _WeatherDetailScreen extends State<WeatherDetailScreen> {
 class AfterSplash extends StatelessWidget {
   // final Object argument;
   // const AfterSplash({Key key, this.argument}) : super(key: key);
-  final PageController _pageController = PageController();
+  final PageController _pageController = PageController(initialPage: 0);
   final RefreshController _refreshController = RefreshController();
 
   void handleInitialBuild(WeatherDetailScreenProps props) async {
@@ -73,9 +73,13 @@ class AfterSplash extends StatelessWidget {
 
           Weather localWeather = Weather.fromJson(weather);
 
-          if (localWeather != null &&
-              DateTime.now().difference(localWeather.updatedTime).inHours < 1) {
+          if (localWeather != null) {
             props.addCityWeatherDetail(localWeather);
+
+            if (DateTime.now().difference(localWeather.updatedTime).inHours >
+                1) {
+              props.getCityWeather(city.woeId);
+            }
           } else {
             props.getCityWeather(city.woeId);
           }
@@ -98,6 +102,13 @@ class AfterSplash extends StatelessWidget {
     return StoreConnector<AppState, WeatherDetailScreenProps>(
       converter: (store) => mapStateToScreen(store),
       onInitialBuild: (props) => this.handleInitialBuild(props),
+      onDidChange: (props) {
+        if (props.index < props.weatherDataList.length) {
+          this._pageController.animateToPage(props.index,
+              duration: Duration(milliseconds: 200),
+              curve: Curves.linearToEaseOut);
+        }
+      },
       builder: (context, props) {
         bool weatherRequestLoading = props.loading;
         Widget body;
@@ -114,8 +125,15 @@ class AfterSplash extends StatelessWidget {
         if (weatherDataList.isEmpty) {
           body = EmptyMessage();
         } else {
-          String weatherStateAbbr =
-              weatherDataList[index].consolidatedWeather.first.weatherStateAbbr;
+          String weatherStateAbbr = 'c';
+
+          if (weatherDataList[index].consolidatedWeather.isNotEmpty) {
+            weatherStateAbbr = weatherDataList[index]
+                .consolidatedWeather
+                .first
+                .weatherStateAbbr;
+          }
+
           backgroundColor = weatherStateBackgroundColors[weatherStateAbbr];
           cardBackgroundColor = getLinearGradient(weatherStateAbbr);
 
